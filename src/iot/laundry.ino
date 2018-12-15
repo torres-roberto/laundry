@@ -71,7 +71,7 @@ void loop() {
     }
     
     function = 0;
-    delay(5000);
+    delay(5);
     //Particle.publish("movement", "jkl", PRIVATE);
 }
 
