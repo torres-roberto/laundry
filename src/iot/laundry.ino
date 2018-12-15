@@ -1,8 +1,29 @@
 // This #include statement was automatically added by the Particle IDE.
+#include <HttpClient.h>
+
+// This #include statement was automatically added by the Particle IDE.
 #include <clickButton.h>
 
 #include "InternetButton/InternetButton.h"
 #include "math.h"
+
+/**
+* Declaring the variables.
+*/
+unsigned int nextTime = 0;    // Next time to contact the server
+HttpClient http;
+
+// Headers currently need to be set at init, useful for API keys etc.
+http_header_t headers[] = {
+    //  { "Content-Type", "application/json" },
+    //  { "Accept" , "application/json" },
+    { "Accept" , "*/*"},
+    { NULL, NULL } // NOTE: Always terminate headers will NULL
+};
+
+http_request_t request;
+http_response_t response;
+//----------------------------------------------------------------------------------
 
 InternetButton b = InternetButton();
 
@@ -13,6 +34,23 @@ InternetButton b = InternetButton();
 // bool _inProgress;
 // bool _isDone;
 // bool _waitOnInitialMove; 
+
+/**
+* Declaring the variables.
+*/
+unsigned int nextTime = 0;    // Next time to contact the server
+HttpClient http;
+
+// Headers currently need to be set at init, useful for API keys etc.
+http_header_t headers[] = {
+    //  { "Content-Type", "application/json" },
+    //  { "Accept" , "application/json" },
+    { "Accept" , "*/*"},
+    { NULL, NULL } // NOTE: Always terminate headers will NULL
+};
+
+http_request_t request;
+http_response_t response;
 
 
 // the Button
@@ -41,6 +79,10 @@ void setup() {
 }
 
 void loop() {
+    request.hostname = "www.timeapi.org";
+    request.port = 80;
+    request.path = "/utc/now";
+    http.get(request, response, headers);
     button1.Update();
 
     // Save click codes in LEDfunction, as click codes are reset at next Update()
