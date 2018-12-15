@@ -1,5 +1,3 @@
-// This #include statement was automatically added by the Particle IDE.
-#include <HttpClient.h>
 
 // This #include statement was automatically added by the Particle IDE.
 #include <clickButton.h>
@@ -7,51 +5,14 @@
 #include "InternetButton/InternetButton.h"
 #include "math.h"
 
-/**
-* Declaring the variables.
-*/
-unsigned int nextTime = 0;    // Next time to contact the server
-HttpClient http;
-
-// Headers currently need to be set at init, useful for API keys etc.
-http_header_t headers[] = {
-    //  { "Content-Type", "application/json" },
-    //  { "Accept" , "application/json" },
-    { "Accept" , "*/*"},
-    { NULL, NULL } // NOTE: Always terminate headers will NULL
-};
-
-http_request_t request;
-http_response_t response;
-//----------------------------------------------------------------------------------
-
 InternetButton b = InternetButton();
 
 // int positions[3] = { 0, 0, 0 };
-// int SEC_UNTIL_STABLE = 7;
-// int SETUP_RETRIES = 3;
-// bool _setupReady;
-// bool _inProgress;
-// bool _isDone;
-// bool _waitOnInitialMove; 
 
 /**
 * Declaring the variables.
 */
 unsigned int nextTime = 0;    // Next time to contact the server
-HttpClient http;
-
-// Headers currently need to be set at init, useful for API keys etc.
-http_header_t headers[] = {
-    //  { "Content-Type", "application/json" },
-    //  { "Accept" , "application/json" },
-    { "Accept" , "*/*"},
-    { NULL, NULL } // NOTE: Always terminate headers will NULL
-};
-
-http_request_t request;
-http_response_t response;
-
 
 // the Button
 const int buttonPin1 = 4;
@@ -79,10 +40,8 @@ void setup() {
 }
 
 void loop() {
-    request.hostname = "www.timeapi.org";
-    request.port = 80;
-    request.path = "/utc/now";
-    http.get(request, response, headers);
+    //https://launevent.servicebus.windows.net//messages
+    // Endpoint=sb://launevent.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=g39mZsoPNPjG60i5My+Qqam9AuxJpbYZTKQp9dqBUyQ=
     button1.Update();
 
     // Save click codes in LEDfunction, as click codes are reset at next Update()
@@ -112,7 +71,8 @@ void loop() {
     }
     
     function = 0;
-    delay(5);
+    delay(5000);
+    //Particle.publish("movement", "jkl", PRIVATE);
 }
 
 void NotifyOff() {
