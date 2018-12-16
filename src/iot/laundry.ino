@@ -18,15 +18,18 @@ unsigned int nextTime = 0;    // Next time to contact the server
 const int buttonPin1 = 4;
 ClickButton button1(buttonPin1, LOW, CLICKBTN_PULLUP);
 
-// Button results 
-int function = 0;
+
+int _buttonClicks = 0;
 
 bool _isRunning = false;
 
+int _currentTumble = 0;
+int TUMBLE_INTERVAL = 10000;
+int RESET_TUMBLE = 0;
+
+int LOOP_INTERVAL = 5;
+
 void setup() {
-    //Tell b to get everything ready to go
-    // Use b.begin(1); if you have the original SparkButton, which does not have a buzzer or a plastic enclosure
-    // to use, just add a '1' between the parentheses in the code below.
     b.begin();
     Serial.begin(9600);
     
@@ -40,16 +43,12 @@ void setup() {
 }
 
 void loop() {
-    //https://launevent.servicebus.windows.net//messages
-    // Endpoint=sb://launevent.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=g39mZsoPNPjG60i5My+Qqam9AuxJpbYZTKQp9dqBUyQ=
     button1.Update();
-
-    // Save click codes in LEDfunction, as click codes are reset at next Update()
-    if(button1.clicks != 0) function = button1.clicks;
     
-    if(function == 1 || function == -1) {
-        Serial.println("SINGLE click");
-        
+    // Save click codes in LEDfunction, as click codes are reset at next Update()
+    if(button1.clicks != 0) _buttonClicks = button1.clicks;
+    
+    if (CheckClicks(_buttonClicks, 1)) {
         if (_isRunning) {
             NotifyOn();
         }
@@ -58,77 +57,61 @@ void loop() {
         }
     }
     
-    if((function == 2 || function == -2) && !_isRunning) {
-        Serial.println("Double click");
+    if (CheckClicks(_buttonClicks, 2) && !_isRunning) {
         _isRunning = true;
+        _currentTumble = RESET_TUMBLE;
         NotifyOn();
     }
     
-    if((function == 3 || function == -3) && _isRunning)  {
-        Serial.println("Triple click");
+    if (CheckClicks(_buttonClicks, 3) && _isRunning)  {
         _isRunning = false;
+        _currentTumble = RESET_TUMBLE;
         NotifyOff();
     }
     
-    function = 0;
-    delay(5);
-    //Particle.publish("movement", "jkl", PRIVATE);
+    if (_isRunning && CheckClicks(_buttonClicks, 0)) {
+        publishMovement();
+    }
+    
+    _buttonClicks = 0;
+    delay(LOOP_INTERVAL);
+}
+
+void publishMovement() {
+    int x = b.readX();
+    int y = b.readY();
+    int z = b.readZ();
+    
+    if (_currentTumble > TUMBLE_INTERVAL) {
+        String position = String("x: ") + String(x) + String(",y: ") + String(y) + String(",z: ") + String(z);
+        Particle.publish("movement", position, PRIVATE);
+        _currentTumble = RESET_TUMBLE;
+    }
+    
+    _currentTumble += LOOP_INTERVAL;
+}
+
+bool CheckClicks(int actualClicks, int expectedClicks) {
+    int negExpectedClicks = -1 * expectedClicks;
+    
+    if (actualClicks == expectedClicks || 
+        actualClicks == negExpectedClicks) {
+        Serial.println(String("Clicks: ") + String(expectedClicks));
+        return true;
+    }
+    return false;
 }
 
 void NotifyOff() {
     b.allLedsOn(178,34,34);
     delay(1000);
     b.allLedsOff();
+    Particle.publish("movement", "Turned Off", PRIVATE);
 }
 
 void NotifyOn() {
     b.allLedsOn(0,20,20);
     delay(1000);
     b.allLedsOff();
+    Particle.publish("movement", "Turned ON", PRIVATE);
 }
-
-
-
-
-
-    
-    //This will make the color of the Button change with what direction you shake it
-    //The abs() part takes the absolute value, because negatives don't work well
-    //b.allLedsOn(abs(xValue), abs(yValue), abs(zValue));
-    /*int x = b.readX();
-    int y = b.readY();
-    int z = b.readZ();
-
-    if (isStartup() && _setupReady == false) {
-        bool machineIsReady = isReadyToTrackLoad();
-        
-        if (!machineIsReady) {
-            _setupReady = false;
-            delay(1000);
-            return;
-        }
-        
-        _setupReady = true;
-        blinkReadyLight();
-    }
-
-    if (hasMoved(x,y,z) && _setupReady == true && _inProgress == false) {
-        _inProgress = true;
-        // Report when this load has started
-        //int[] range = getRange(x,y,z);
-        //reportRange(range);
-        _isDone = isLoadComplete(x, y, z);
-    } 
-    else if (hasMoved(x,y,z) && _inProgress == true) {
-        //int[] range = getRange(x,y,z);
-        //reportRange(range);
-        _isDone = isLoadComplete(x,y,z);
-    }
-    
-    if (_isDone) {
-        notify();
-        cleanup();
-    }
-    */
-    //delay(1000);
-
