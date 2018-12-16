@@ -106,12 +106,10 @@ void NotifyOff() {
     b.allLedsOn(178,34,34);
     delay(1000);
     b.allLedsOff();
-    Particle.publish("movement", "Turned Off", PRIVATE);
 }
 
 void NotifyOn() {
     b.allLedsOn(0,20,20);
     delay(1000);
     b.allLedsOff();
-    Particle.publish("movement", "Turned ON", PRIVATE);
 }
