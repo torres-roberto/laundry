@@ -18,7 +18,6 @@ unsigned int nextTime = 0;    // Next time to contact the server
 const int buttonPin1 = 4;
 ClickButton button1(buttonPin1, LOW, CLICKBTN_PULLUP);
 
-
 int _buttonClicks = 0;
 
 bool _isRunning = false;
@@ -83,7 +82,7 @@ void publishMovement() {
     int z = b.readZ();
     
     if (_currentTumble > TUMBLE_INTERVAL) {
-        String position = String("x: ") + String(x) + String(",y: ") + String(y) + String(",z: ") + String(z);
+        String position = String("x: ") + String(x) + String(", y: ") + String(y) + String(", z: ") + String(z);
         Particle.publish("movement", position, PRIVATE);
         _currentTumble = RESET_TUMBLE;
     }
