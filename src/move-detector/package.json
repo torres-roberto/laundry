@@ -1,0 +1,16 @@
+{
+  "name": "move-detector",
+  "version": "1.0.0",
+  "description": "Process movement(s) made by field device(s).",
+  "main": "motion-sensor.js",
+  "dependencies": {
+    "azure-iot-device": "^1.8.2",
+    "azure-iothub": "^1.8.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Roberto Torres",
+  "license": "ISC"
+}
