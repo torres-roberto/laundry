@@ -7,14 +7,8 @@
 
 InternetButton b = InternetButton();
 
-// int positions[3] = { 0, 0, 0 };
-
-/**
-* Declaring the variables.
-*/
 unsigned int nextTime = 0;    // Next time to contact the server
 
-// the Button
 const int buttonPin1 = 4;
 ClickButton button1(buttonPin1, LOW, CLICKBTN_PULLUP);
 
