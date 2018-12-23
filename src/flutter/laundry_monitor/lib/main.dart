@@ -97,6 +97,17 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.display1,
             ),
+            new Container(
+              width: 150.0,
+              height: 150.0,
+              alignment: Alignment.center,
+              decoration: new BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/laundry_machine.png'),
+                  fit: BoxFit.fill
+                )
+              ),
+            )
           ],
         ),
       ),
