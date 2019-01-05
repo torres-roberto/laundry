@@ -71,6 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),        
       ),
+      backgroundColor: Colors.redAccent,      
       body: new Center(        
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -89,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: <Widget>[            
             new Text(
               'You have pushed the button this many times:',
             ),
