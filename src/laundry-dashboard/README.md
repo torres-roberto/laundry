@@ -1,3 +1,9 @@
+# DigiWash
+Monitor your laundry with a device that learns your wash patterns.
+
+![Alt text](./logo.svg)
+<img src="./logo.svg">
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
