@@ -1,122 +1,168 @@
+import 'dart:async';
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 
-void main() => runApp(new MyApp());
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Laundry Monitor',
-      debugShowCheckedModeBanner: false,
-      theme: new ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-        // counter didn't reset back to zero; the application is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: new MyHomePage(title: 'Laundry Monitor'),
-    );
-  }
+Future<void> main() async {
+  final FirebaseApp app = await FirebaseApp.configure(
+    name: 'db2',
+    options: Platform.isIOS
+        ? const FirebaseOptions(
+            googleAppID: '1:297855924061:ios:c6de2b69b03a5be8',
+            gcmSenderID: '297855924061',
+            databaseURL: 'https://flutterfire-cd2f7.firebaseio.com',
+          )
+        : const FirebaseOptions(
+            googleAppID: '1:297855924061:android:669871c998cc21bd',
+            apiKey: 'AIzaSyD_shO5mfO9lhy2TVWhfo1VUmARKlG4suk',
+            databaseURL: 'https://flutterfire-cd2f7.firebaseio.com',
+          ),
+  );
+  runApp(MaterialApp(
+    title: 'Flutter Database Example',
+    home: MyHomePage(app: app),
+  ));
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  MyHomePage({this.app});
+  final FirebaseApp app;
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int _counter;
+  DatabaseReference _counterRef;
+  DatabaseReference _messagesRef;
+  StreamSubscription<Event> _counterSubscription;
+  StreamSubscription<Event> _messagesSubscription;
+  bool _anchorToBottom = false;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+  String _kTestKey = 'Hello';
+  String _kTestValue = 'world!';
+  DatabaseError _error;
+
+  @override
+  void initState() {
+    super.initState();
+    // Demonstrates configuring to the database using a file
+    _counterRef = FirebaseDatabase.instance.reference().child('counter');
+    // Demonstrates configuring the database directly
+    final FirebaseDatabase database = FirebaseDatabase(app: widget.app);
+    _messagesRef = database.reference().child('messages');
+    database.reference().child('counter').once().then((DataSnapshot snapshot) {
+      print('Connected to second database and read ${snapshot.value}');
+    });
+    database.setPersistenceEnabled(true);
+    database.setPersistenceCacheSizeBytes(10000000);
+    _counterRef.keepSynced(true);
+    _counterSubscription = _counterRef.onValue.listen((Event event) {
+      setState(() {
+        _error = null;
+        _counter = event.snapshot.value ?? 0;
+      });
+    }, onError: (Object o) {
+      final DatabaseError error = o;
+      setState(() {
+        _error = error;
+      });
+    });
+    _messagesSubscription =
+        _messagesRef.limitToLast(10).onChildAdded.listen((Event event) {
+      print('Child added: ${event.snapshot.value}');
+    }, onError: (Object o) {
+      final DatabaseError error = o;
+      print('Error: ${error.code} ${error.message}');
     });
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _messagesSubscription.cancel();
+    _counterSubscription.cancel();
+  }
+
+  Future<Null> _increment() async {
+    // Increment counter in transaction.
+    final TransactionResult transactionResult =
+        await _counterRef.runTransaction((MutableData mutableData) async {
+      mutableData.value = (mutableData.value ?? 0) + 1;
+      return mutableData;
+    });
+
+    if (transactionResult.committed) {
+      _messagesRef.push().set(<String, String>{
+        _kTestKey: '$_kTestValue ${transactionResult.dataSnapshot.value}'
+      });
+    } else {
+      print('Transaction not committed.');
+      if (transactionResult.error != null) {
+        print(transactionResult.error.message);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return new Scaffold(
-      appBar: new AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: new Text(widget.title),        
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Flutter Database Example'),
       ),
-      backgroundColor: Colors.redAccent,      
-      body: new Center(        
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: new Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug paint" (press "p" in the console where you ran
-          // "flutter run", or select "Toggle Debug Paint" from the Flutter tool
-          // window in IntelliJ) to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[            
-            new Text(
-              'You have pushed the button this many times:',
+      body: Column(
+        children: <Widget>[
+          Flexible(
+            child: Center(
+              child: _error == null
+                  ? Text(
+                      'Button tapped $_counter time${_counter == 1 ? '' : 's'}.\n\n'
+                          'This includes all devices, ever.',
+                    )
+                  : Text(
+                      'Error retrieving button tap count:\n${_error.message}',
+                    ),
             ),
-            new Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
+          ),
+          ListTile(
+            leading: Checkbox(
+              onChanged: (bool value) {
+                setState(() {
+                  _anchorToBottom = value;
+                });
+              },
+              value: _anchorToBottom,
             ),
-            new Container(
-              width: 150.0,
-              height: 150.0,
-              alignment: Alignment.center,
-              decoration: new BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/laundry_machine.png'),
-                  fit: BoxFit.fill
-                )
-              ),
-            )
-          ],
-        ),
+            title: const Text('Anchor to bottom'),
+          ),
+          Flexible(
+            child: FirebaseAnimatedList(
+              key: ValueKey<bool>(_anchorToBottom),
+              query: _messagesRef,
+              reverse: _anchorToBottom,
+              sort: _anchorToBottom
+                  ? (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key)
+                  : null,
+              itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                  Animation<double> animation, int index) {
+                return SizeTransition(
+                  sizeFactor: animation,
+                  child: Text("$index: ${snapshot.value.toString()}"),
+                );
+              },
+            ),
+          ),
+        ],
       ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _incrementCounter,
+      floatingActionButton: FloatingActionButton(
+        onPressed: _increment,
         tooltip: 'Increment',
-        child: new Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
