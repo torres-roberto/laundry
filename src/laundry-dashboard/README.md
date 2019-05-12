@@ -1,8 +1,7 @@
 # DigiWash
 Monitor your laundry with a device that learns your wash patterns.
 
-![Alt text](./logo.svg)
-<img src="./logo.svg">
+<img src="./public/laundry-machine.png" alt="laundry machine" width="200">
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
