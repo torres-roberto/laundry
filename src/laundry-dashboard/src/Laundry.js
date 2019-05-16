@@ -6,7 +6,7 @@ import './Laundry.css';
 class Laundry extends React.Component {
     render() {
         return (
-            <div id="here">
+            <div className="responsive">
                 <LaundryPanel />
                 <LaundryContainer />
             </div>

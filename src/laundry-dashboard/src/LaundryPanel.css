@@ -1,8 +1,8 @@
 .LaundryPanel {
     position: relative;
-    width: 200px;
-    height: 60px;
-    left: 25px;
+    width: 80%;
+    padding-bottom: 18%;
+    left: 10%;
     background-color: #cccccc;
     border-left: solid black .5mm;
     border-right: solid black .5mm;
