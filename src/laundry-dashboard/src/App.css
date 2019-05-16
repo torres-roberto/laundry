@@ -8,6 +8,7 @@
   pointer-events: none;
 } */
 
+
 .App-logo {
   animation: tiltLeft .1s 1 linear forwards, tilt .1s infinite linear .1s alternate;
   height: 40vmin;
@@ -15,7 +16,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: white;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

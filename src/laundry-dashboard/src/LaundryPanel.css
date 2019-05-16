@@ -1,0 +1,10 @@
+.LaundryPanel {
+    position: relative;
+    width: 200px;
+    height: 60px;
+    left: 25px;
+    background-color: #cccccc;
+    border-left: solid black .5mm;
+    border-right: solid black .5mm;
+    border-top: solid black .5mm;
+}

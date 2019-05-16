@@ -1,13 +1,17 @@
 import React from 'react';
-import laundryMachine from './logo.svg';
+import LaundryContainer from './LaundryContainer';
+import LaundryPanel from './LaundryPanel';
+import './Laundry.css';
 
-const Laundry = () => {
-    return (
-        <div>
-            <img src={laundryMachine}  alt="logo" />
-            <p>I'm a laundry!</p>
-        </div>
-    )
+class Laundry extends React.Component {
+    render() {
+        return (
+            <div id="here">
+                <LaundryPanel />
+                <LaundryContainer />
+            </div>
+        );
+    }
 }
 
 export default Laundry;
