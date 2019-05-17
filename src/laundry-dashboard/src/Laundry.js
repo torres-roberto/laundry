@@ -4,11 +4,26 @@ import LaundryPanel from './LaundryPanel';
 import './Laundry.css';
 
 class Laundry extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { 
+            status: "isWashing",
+            movement: "shake"
+        };
+    }
+    
     render() {
+        setTimeout(() => {
+            this.setState({
+                status: "done",
+                movement: "still"
+            })
+        }, 3000);
+
         return (
-            <div className="responsive shake">
+            <div className={"responsive " + this.state.movement}>
                 <LaundryPanel />
-                <LaundryContainer />
+                <LaundryContainer status={this.state.status}/>
             </div>
         );
     }

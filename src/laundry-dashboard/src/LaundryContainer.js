@@ -2,16 +2,15 @@ import React from 'react';
 import './LaundryContainer.css';
 import LaundryDoor from './LaundryDoor';
 
-class LaundryContainer extends React.Component {
-    render() {
-        return (
-            <div 
-                className="LaundryContainer"
-            >
-            <LaundryDoor />
-            </div>
-        );
-    }
+const laundryContainer = (props) => {
+    console.log('container', props);
+    return (
+        <div 
+            className="LaundryContainer"
+        >
+        <LaundryDoor status={props.status}/>
+        </div>
+    );
 }
 
-export default LaundryContainer;
+export default laundryContainer;
