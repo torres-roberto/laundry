@@ -6,7 +6,7 @@ import './Laundry.css';
 class Laundry extends React.Component {
     render() {
         return (
-            <div className="responsive">
+            <div className="responsive shake">
                 <LaundryPanel />
                 <LaundryContainer />
             </div>

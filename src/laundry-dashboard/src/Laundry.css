@@ -10,3 +10,17 @@
     width: 25%;
     height: 0;
 }
+
+.shake {
+    animation: tiltLeft .1s 1 linear forwards, tilt .1s infinite linear .1s alternate;
+}
+
+@keyframes tiltLeft {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-1deg); }
+  }
+  
+  @keyframes tilt {
+    from { transform: rotate(-1deg); }
+    to { transform: rotate(1deg); }
+  }
