@@ -1,6 +1,6 @@
 import React from 'react';
 import './LaundryContainer.css';
-import LaundryDoor from './LaundryDoor';
+import LaundryDoor from './LaundryDoor/LaundryDoor';
 
 const laundryContainer = (props) => {
     console.log('container', props);

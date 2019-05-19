@@ -1,7 +1,7 @@
 import React from 'react';
-import LaundryContainer from './LaundryContainer';
-import LaundryPanel from './LaundryPanel';
-import './Laundry.css';
+import LaundryContainer from './LaundryContainer/LaundryContainer';
+import LaundryHeadBoard from './LaundryHeadBoard/LaundryHeadBoard';
+import './LaundryMachine.css';
 
 class Laundry extends React.Component {
     constructor(props) {
@@ -21,8 +21,8 @@ class Laundry extends React.Component {
     
     render() {
         return (
-            <div className={"responsive " + this.state.movement}>
-                <LaundryPanel />
+            <div className={"LaundryMachine " + this.state.movement}>
+                <LaundryHeadBoard />
                 <LaundryContainer status={this.state.status}/>
             </div>
         );

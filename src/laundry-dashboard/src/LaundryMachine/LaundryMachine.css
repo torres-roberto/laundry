@@ -1,9 +1,4 @@
-.Laundry {
-    height: 350px;
-    width: 250px;
-}
-
-.responsive {
+.LaundryMachine {
     /* left: 0; */
     position: absolute;
     padding-bottom: 25%;
@@ -18,9 +13,9 @@
 @keyframes tiltLeft {
     from { transform: rotate(0deg); }
     to { transform: rotate(-1deg); }
-  }
+}
   
-  @keyframes tilt {
+@keyframes tilt {
     from { transform: rotate(-1deg); }
     to { transform: rotate(1deg); }
-  }
+}

@@ -1,9 +1,6 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Laundry from './Laundry';
-import LaundryContainer from './LaundryContainer';
-import LaundryDoor from './LaundryDoor';
+import LaundryMachine from './LaundryMachine/LaundryMachine';
 
 function App() {
   return (
@@ -18,7 +15,7 @@ function App() {
         >
 
         </a>
-        <Laundry />        
+        <LaundryMachine />        
       </header>
     </div>
   );
