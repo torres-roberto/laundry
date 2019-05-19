@@ -10,16 +10,16 @@ class Laundry extends React.Component {
             status: "isWashing",
             movement: "shake"
         };
-    }
-    
-    render() {
+
         setTimeout(() => {
             this.setState({
                 status: "done",
                 movement: "still"
             })
         }, 3000);
-
+    }
+    
+    render() {
         return (
             <div className={"responsive " + this.state.movement}>
                 <LaundryPanel />
