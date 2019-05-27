@@ -1,12 +1,11 @@
 .LaundryMachine {
-    /* left: 0; */
     position: absolute;
     padding-bottom: 25%;
     width: 25%;
     height: 0;
 }
 
-.shake {
+.isWashing.LaundryMachine {
     animation: tiltLeft .1s 1 linear forwards, tilt .1s infinite linear .1s alternate;
 }
 
