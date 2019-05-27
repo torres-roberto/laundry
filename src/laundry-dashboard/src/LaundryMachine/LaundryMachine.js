@@ -4,11 +4,10 @@ import LaundryHeadBoard from './LaundryHeadBoard/LaundryHeadBoard';
 import './LaundryMachine.css';
 
 const LaundryMachine = (props) => (
-    <div className={"LaundryMachine " + props.status}>
+    <div className={`LaundryMachine ${props.status}`}>
         <LaundryHeadBoard />
         <LaundryContainer status={props.status}/>
     </div>
 );
-    
 
 export default LaundryMachine;
